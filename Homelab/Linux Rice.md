@@ -6,6 +6,49 @@
 * Machine: Thinkpad T14
 * Colorscheme: Gruvbox
 ----------------------------------------------------------------
+## Thinkpad Dock
+### External Monitors When Docked/Undocked (xrandr)
+1. Install acpid
+```bash
+sudo pacman -S acpid
+```
+2. Enable and start acpid
+```bash
+sudo systemctl enable --now acpid
+```
+3. Create script for setting the xrandr settings at /etc/acpi/external-monitor.sh
+```
+#!/bin/sh
+export DISPLAY=:0
+export XAUTHORITY=/home/dream/.Xauthority
+
+if [ "$1" = "dock" ]; then
+    logger "ACPI event: Turning on DP2-2-1. This will take 10 seconds or so..."
+    while (xrandr | grep "DP2-2-1 disconnected"); do
+        sleep 1
+    done
+    sleep 1
+    xrandr --output eDP-1 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output DP-2-1 --mode 1920x1080 --pos 0x0 --rotate normal
+else
+    logger "ACPI event: Turning off DP2-2-1"
+    xrandr --output eDP-1 --primary --mode 1920x1080 --pos 0x0 --rotate normal --output DP-2-1 --off
+fi
+```
+4. Create 2 events files for acpid at /etc/acpi/events/
+**Note:** The event can be gathered by docking/undocking while `sudo acpi_listen` is running.
+*/etc/acpi/events/thinkpad-dock*
+```
+event=ibm/hotkey LEN0268:00 00000080 00004010
+action=su dream -c "/etc/acpi/external-monitor.sh dock"
+```
+*/etc/acpi/events/thinkpad-undock*
+```
+event=ibm/hotkey LEN0268:00 00000080 00004011
+action=su dream -c "/etc/acpi/external-monitor.sh undock"
+```
+
+
+----------------------------------------------------------------
 ## Updating Mirrors
 
 ----------------------------------------------------------------
