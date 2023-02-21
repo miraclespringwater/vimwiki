@@ -27,7 +27,7 @@
 * **React**: library that defines what a component is and how multiple components work together
 * **ReactDOM**: Library that knows how to get a component to show up in the browser
  
- ## ES6 Modules (import/export statements)
+## ES6 Modules (import/export statements)
 * Export Statements:
     * Two kinds: 'default' and 'named'
     * Default Exports:
@@ -76,3 +76,69 @@
     * Syntax:
         * './' or '../' means we are importing a file that we created
         * No './' or '../' means we are importing a package
+
+## Images
+* Importing images:
+```javascript
+import MyImage from './path/to/image.png'
+```
+* If image is less than 9.7kb (10,000 bytes), gets converted to base64 and is referenced inline.
+* If image is more than above size, gets treated as separate file. 
+```html
+<img src="data:image/png;base64,ivjkdalvk"/>
+<!-- versus -->
+<img src="/static/media/myimage.png"/>
+```
+
+## CSS
+* Importing .css
+```javascript
+// importing a CSS from an npm module 
+import 'bulma/css/bulma.css'
+// importing CSS from a local file
+import './path/to/my.css'
+```
+* When importing CSS, the referenced CSS is put directly in a <style> tag in the <head> tag.
+
+## Events
+https://reactjs.org/docs/events.html
+We make use of events anytime we want to be notified about the user interacting with our app in some way.
+## Using Events
+1. Decide what kind of event you want to watch for.
+2. Create a function. *Usually called an event handler or callback function.*
+3. Name the function using pattern of *(handle|on) + EventName* (recommended) i.e. handleClick
+4. Pass the function as a prop to a plain element
+5. Make sure you pass teh function using a valid event name (i.e. onClick, onMouseOver, etc.)
+6. Make sure you pass a reference to the function (don't call it in the prop)
+
+## State
+State: Data that changes as the user interacts with our application.
+When this data changes, React will update content on the screen automagically.
+***This is the one-and-only way we can change what content React shows.***
+### Using State
+1. Define a piece of state with the useState function.
+2. Give a value to the useState function. This is the default, starting value for our piece of state.
+3. Use the state in some way in our component (often used in the returned JSX).
+4. When the user does something, update the piece of state. Casues React to rerender the component.
+
+## Handling Text Inputs
+1. Create a new piece of state
+2. Create an event handler to watch for the 'onChange' event
+3. When the 'onChange' event fires, get the value from the input
+4. Take that value from the input and use it to update your state
+5. Pass your state to the input as the value prop
+
+## Key Prop
+* When rendering a dynamic list of elements, a 'key' prop is used for letting react know which elements can be reusded for the next render.
+* React will compare the keys of the new element with the previous keys and then:
+  1. mount components having a new key
+  2. unmount components whose keys are not used anymore
+* If there are no ID's to use, there are two fallbacks that can be used:
+  * Use the index of the record (will lead to bugs as the list is updated)
+  * Generate a unique ID yourself
+* Requirements for keys:
+  * Use whenever we have a list of elements
+  * Add the key to the top-most JSX element in the list
+  * Must be a string or number
+  * Should be unique ***for this list***
+  * Should be consistent across rerenders
